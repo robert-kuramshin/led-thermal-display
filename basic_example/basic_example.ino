@@ -24,14 +24,14 @@ float pixels[AMG88xx_PIXEL_ARRAY_SIZE];
 CRGB leds[8][NUM_LEDS];
 
 void setup() {
-  FastLED.addLeds<WS2812B, DATA_PIN_1, RGB>(leds[0], NUM_LEDS);
-  FastLED.addLeds<WS2812B, DATA_PIN_2, RGB>(leds[1], NUM_LEDS);
-  FastLED.addLeds<WS2812B, DATA_PIN_3, RGB>(leds[2], NUM_LEDS);
-  FastLED.addLeds<WS2812B, DATA_PIN_4, RGB>(leds[3], NUM_LEDS);
-  FastLED.addLeds<WS2812B, DATA_PIN_5, RGB>(leds[4], NUM_LEDS);
-  FastLED.addLeds<WS2812B, DATA_PIN_6, RGB>(leds[5], NUM_LEDS);
-  FastLED.addLeds<WS2812B, DATA_PIN_7, RGB>(leds[6], NUM_LEDS);
-  FastLED.addLeds<WS2812B, DATA_PIN_8, RGB>(leds[7], NUM_LEDS);
+  FastLED.addLeds<WS2812B, DATA_PIN_1, GRB>(leds[0], NUM_LEDS);
+  FastLED.addLeds<WS2812B, DATA_PIN_2, GRB>(leds[1], NUM_LEDS);
+  FastLED.addLeds<WS2812B, DATA_PIN_3, GRB>(leds[2], NUM_LEDS);
+  FastLED.addLeds<WS2812B, DATA_PIN_4, GRB>(leds[3], NUM_LEDS);
+  FastLED.addLeds<WS2812B, DATA_PIN_5, GRB>(leds[4], NUM_LEDS);
+  FastLED.addLeds<WS2812B, DATA_PIN_6, GRB>(leds[5], NUM_LEDS);
+  FastLED.addLeds<WS2812B, DATA_PIN_7, GRB>(leds[6], NUM_LEDS);
+  FastLED.addLeds<WS2812B, DATA_PIN_8, GRB>(leds[7], NUM_LEDS);
 
   bool status;
 
@@ -56,7 +56,7 @@ void loop() {
       uint8_t scaled = map((pixels[i * 8 + j]), MINTEMP, MAXTEMP, 0, 255);
       scaled = constrain(scaled, 0, 255);
       
-      leds[j][i].green = scaled;
+      leds[j][i].red = scaled;
       //leds[j][i].blue = 1;
       leds[j][i].blue = 255 - scaled;
     }

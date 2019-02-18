@@ -6,12 +6,8 @@ Adafruit_AMG88xx amg;
 
 float pixels[AMG88xx_PIXEL_ARRAY_SIZE];
 
-// How many leds in your strip?
 #define NUM_LEDS 8
 
-// For led chips like Neopixels, which have a data line, ground, and power, you just
-// need to define DATA_PIN.  For led chipsets that are SPI based (four wires - data, clock,
-// ground, and power), like the LPD8806 define both DATA_PIN and CLOCK_PIN
 #define DATA_PIN_1 3
 #define DATA_PIN_2 4
 #define DATA_PIN_3 5
@@ -20,6 +16,9 @@ float pixels[AMG88xx_PIXEL_ARRAY_SIZE];
 #define DATA_PIN_6 8
 #define DATA_PIN_7 9
 #define DATA_PIN_8 10
+
+#define MINTEMP 18
+#define MAXTEMP 32
 
 // Define the array of leds
 CRGB leds[8][NUM_LEDS];
@@ -54,22 +53,14 @@ void loop() {
   {
     for (int j = 0; j < 8; j++)
     {
-      int scaled = scale(pixels[i * 8 + j]);
+      uint8_t scaled = map((pixels[i * 8 + j]), MINTEMP, MAXTEMP, 0, 255);
+      scaled = constrain(scaled, 0, 255);
+      
       leds[j][i].green = scaled;
       //leds[j][i].blue = 1;
-      leds[j][i].blue = 50 - scaled;
+      leds[j][i].blue = 255 - scaled;
     }
   }
   FastLED.show();
 
 }
-
-int scale(float input)
-{
-  return (int)(((input-18) / 12) * 50);
-}
-
-
-
-
-//________----_____________________________________------------------------

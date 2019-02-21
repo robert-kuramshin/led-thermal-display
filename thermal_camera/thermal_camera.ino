@@ -17,8 +17,8 @@ float pixels[AMG88xx_PIXEL_ARRAY_SIZE];
 #define DATA_PIN_7 9
 #define DATA_PIN_8 10
 
-#define MINTEMP 10
-#define MAXTEMP 32
+#define MINTEMP 15
+#define MAXTEMP 28
 
 CRGB leds[8][NUM_LEDS];
 
@@ -55,9 +55,9 @@ uint32_t depth_converter(uint16_t rgb565)
 {
   uint32_t rgb888 = 0;
 
-  rgb888 += (rgb565 & 0b1111100000000000)<<8;//red
-  rgb888 += (rgb565 & 0b0000011111100000)<<4;//green
-  rgb888 += (rgb565 & 0b0000000000011111)<<3;//blue
+  rgb888 += ((uint32_t)(rgb565 & 0b1111100000000000))<<8;//red
+  rgb888 += ((uint32_t)(rgb565 & 0b0000011111100000))<<5;//green
+  rgb888 += ((uint32_t)(rgb565 & 0b0000000000011111))<<3;//blue
 
   return rgb888;
 }
@@ -74,26 +74,41 @@ void setup() {
 
   bool status;
 
+  Serial.begin(115200);
+
   status = amg.begin();
   if (!status) {
-    //Serial.println("Could not find a valid AMG88xx sensor, check wiring!");
+    Serial.println("Could not find a valid AMG88xx sensor, check wiring!");
     while (1);
   }
 }
 
 void loop() {
   amg.readPixels(pixels);
+  uint8_t scaled;
 
   for (int i = 0; i < 8; i++)
   {
     for (int j = 0; j < 8; j++)
     {
-      uint8_t scaled = map((pixels[i * 8 + j]), MINTEMP, MAXTEMP, 0, 255);
+      scaled = map((pixels[i * 8 + j]), MINTEMP, MAXTEMP, 0, 255);
       scaled = constrain(scaled, 0, 255);
       
       leds[j][i] = depth_converter(camColors[scaled]);
     }
   }
+//  Serial.print("d:");
+//  Serial.print(scaled);
+//  Serial.print(", ");
+//  Serial.print("r:");
+//  Serial.print(leds[0][0].red);
+//  Serial.print(", ");
+//  Serial.print("g:");
+//  Serial.print(leds[0][0].green);
+//  Serial.print(", ");
+//  Serial.print("b:");
+//  Serial.println(leds[0][0].blue);
+  
   FastLED.show();
 
 }

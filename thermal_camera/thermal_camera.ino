@@ -17,12 +17,12 @@ float pixels[AMG88xx_PIXEL_ARRAY_SIZE];
 #define DATA_PIN_7 9
 #define DATA_PIN_8 10
 
-#define MINTEMP 18
+#define MINTEMP 10
 #define MAXTEMP 32
 
 CRGB leds[8][NUM_LEDS];
 
-//rgb565 needs to be converted to rgb888
+//rgb565, needs to be converted to rgb888
 const uint16_t camColors[] = {0x480F,
 0x400F,0x400F,0x400F,0x4010,0x3810,0x3810,0x3810,0x3810,0x3010,0x3010,
 0x3010,0x2810,0x2810,0x2810,0x2810,0x2010,0x2010,0x2010,0x1810,0x1810,
@@ -54,10 +54,10 @@ const uint16_t camColors[] = {0x480F,
 uint32_t depth_converter(uint16_t rgb565)
 {
   uint32_t rgb888 = 0;
-  
-  rgb888 += (rgb565 & 0xF800)<5;//red
-  rgb888 += (rgb565 & 0x07E0)<3;//green
-  rgb888 += (rgb565 & 0x001F);//blue
+
+  rgb888 += (rgb565 & 0b1111100000000000)<<8;//red
+  rgb888 += (rgb565 & 0b0000011111100000)<<4;//green
+  rgb888 += (rgb565 & 0b0000000000011111)<<3;//blue
 
   return rgb888;
 }

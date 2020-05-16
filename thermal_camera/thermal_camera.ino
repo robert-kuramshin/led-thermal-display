@@ -8,17 +8,17 @@ float pixels[AMG88xx_PIXEL_ARRAY_SIZE];
 
 #define NUM_LEDS 8
 
-#define DATA_PIN_1 3
-#define DATA_PIN_2 4
-#define DATA_PIN_3 5
-#define DATA_PIN_4 6
-#define DATA_PIN_5 7
-#define DATA_PIN_6 8
-#define DATA_PIN_7 9
-#define DATA_PIN_8 10
+#define DATA_PIN_1 2
+#define DATA_PIN_2 3
+#define DATA_PIN_3 4
+#define DATA_PIN_4 5
+#define DATA_PIN_5 6
+#define DATA_PIN_6 7
+#define DATA_PIN_7 8
+#define DATA_PIN_8 9
 
-#define MINTEMP 15
-#define MAXTEMP 28
+float mintemp;
+float maxtemp;
 
 CRGB leds[8][NUM_LEDS];
 
@@ -81,6 +81,10 @@ void setup() {
     Serial.println("Could not find a valid AMG88xx sensor, check wiring!");
     while (1);
   }
+
+  float room_temp = amg.readThermistor();
+  mintemp = room_temp - 10;
+  maxtemp = room_temp + 10;
 }
 
 void loop() {
@@ -91,7 +95,7 @@ void loop() {
   {
     for (int j = 0; j < 8; j++)
     {
-      scaled = map((pixels[i * 8 + j]), MINTEMP, MAXTEMP, 0, 255);
+      scaled = map((pixels[i * 8 + j]), mintemp, maxtemp, 0, 255);
       scaled = constrain(scaled, 0, 255);
       
       leds[j][i] = depth_converter(camColors[scaled]);
